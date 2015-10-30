@@ -1,0 +1,42 @@
+---
+
+- name: ensure monit is installed
+  sudo: yes
+  apt:
+    name: monit
+    state: latest
+
+- name: ensure monit is running and anabled
+  sudo: yes
+  service:
+    name: monit
+    state: started
+    enabled: yes
+
+- name: ensure user monitrc exists
+  template:
+    src: dot_monitrc.j2
+    dest: "{{item.home}}/.monitrc"
+    owner: "{{item.user}}"
+    group: "{{item.group}}"
+    mode: 0600
+  with_items: submonit_users
+
+- name: create monitrc.d in user home
+  file:
+    path: "{{item.home}}/.monitrc.d"
+    state: directory
+    group: "{{item.group}}"
+    owner: "{{item.user}}"
+    mode: 0700
+  with_items: submonit_users
+
+- name: create main monit task to keep user monits running
+  template:
+    src: user_main_monit.j2
+    dest: "{{monit_conf_d}}/{{item.user}}_submonit"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: submonit_users
+  notify: reload monit

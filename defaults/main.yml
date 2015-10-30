@@ -1,0 +1,6 @@
+---
+
+submonit_users: []
+
+
+monit_conf_d: /etc/monit/conf.d

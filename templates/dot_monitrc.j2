@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+
+set daemon 120
+
+set httpd port {{ item.port }}
+    allow {{ item.user }}:{{ item.password }}
+
+include {{ item.home }}/.monitrc.d/*

@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+check process {{ item.user }}_monit with pidfile {{ item.home }}/.monit.pid
+    start program = "/usr/bin/monit -c {{ item.home }}/.monitrc" as uid "{{ item.user }}" and gid "{{ item.group }}"
+    stop program = "/usr/bin/monit -c {{ item.home }}/.monitrc quit" as uid "{{ item.user }}" and gid "{{ item.group }}"
